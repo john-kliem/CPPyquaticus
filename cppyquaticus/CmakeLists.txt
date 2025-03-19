@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.10)
+project(Cppyquaticus)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Find nlohmann/json (if installed via vcpkg)
+find_package(nlohmann_json QUIET)
+
+# Include directories
+include_directories(include third_party)
+
+# Source files
+set(SOURCES 
+    src/config.cpp 
+    src/agent.cpp 
+    src/pid.cpp 
+    src/cppyquaticus.cpp
+)
+
+# Create the executable
+add_executable(cppyquaticus ${SOURCES})
+
+# Link nlohmann_json if found (for vcpkg users)
+if(nlohmann_json_FOUND)
+    target_link_libraries(cppyquaticus PRIVATE nlohmann_json::nlohmann_json)
+endif
