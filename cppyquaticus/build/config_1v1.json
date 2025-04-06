@@ -1,0 +1,20 @@
+{
+    "agents": [[0, "surveyor"], [1, "surveyor"]],
+    "agent_starts": [[35.0, 65.0, 90.0], [125.0, 65.0, -90.0]],
+    "teams": {
+        "team_0": {
+            "team_id": 0,
+            "agents_on_team": [0],
+            "areas": [[[0, 0], [0, 80], [80, 80], [80, 0]]],
+            "flags": [[15, 40]],
+            "home_base": [[15, 40]]
+        },
+        "team_1": {
+            "team_id": 1,
+            "agents_on_team": [1],
+            "areas": [[[80, 0], [80, 80],[160, 80], [160, 0]]],
+            "flags": [[145, 40]],
+            "home_base": [[145, 40]]
+        }
+    }
+}

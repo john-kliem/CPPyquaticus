@@ -1,27 +1,76 @@
 cmake_minimum_required(VERSION 3.10)
-project(Cppyquaticus)
+project(cppyquaticus)
+#cmake_policy(SET CMP0148 NEW)
+#find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+
+#pybind11 Craz
+#find_package(pybind11 REQUIRED)
+
+
 # Find nlohmann/json (if installed via vcpkg)
 find_package(nlohmann_json QUIET)
+# Manually specify Raylib paths
+set(RAYLIB_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/lib")  
+set(RAYLIB_LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
 
 # Include directories
-include_directories(include third_party)
+include_directories(${RAYLIB_INCLUDE_DIR})
+link_directories(${RAYLIB_LIB_DIR})
+
+
 
 # Source files
 set(SOURCES 
-    src/config.cpp 
+    src/renderer.cpp
     src/agent.cpp 
     src/pid.cpp 
+    src/team.cpp
     src/cppyquaticus.cpp
 )
 
 # Create the executable
 add_executable(cppyquaticus ${SOURCES})
 
+target_include_directories(cppyquaticus PRIVATE include third_party src)
+
+
+
 # Link nlohmann_json if found (for vcpkg users)
 if(nlohmann_json_FOUND)
     target_link_libraries(cppyquaticus PRIVATE nlohmann_json::nlohmann_json)
-endif
+endif()
+#if(raylib_FOUND)
+#    target_link_directories(cppyquaticus PRIVATE /usr/local/lib)
+#    target_include_directories(cppyquaticus PRIVATE /usr/local/include)
+#    target_link_libraries(cppyquaticus PRIVATE raylib)
+
+    #target_link_libraries(cppyquaticus PRIVATE raylib)
+#else()
+#    message(WARNING "Raylib not found! Make sure it's installed and available.")
+#endif()
+
+
+# Manually link Raylib (static linking)
+target_link_libraries(cppyquaticus 
+    PRIVATE 
+    ${RAYLIB_LIB_DIR}/libraylib.a
+    m
+    pthread
+    dl
+    objc
+    "-framework CoreVideo"
+    "-framework IOKit"
+    "-framework Cocoa"
+    "-framework GLUT"
+    "-framework OpenGL"
+)
+# Ensure compiler knows we're using Raylib
+add_compile_definitions(RAYLIB_STATIC)
+
+# cmake .. -DCMAKE_PREFIX_PATH=$(brew --prefix nlohmann-json)
